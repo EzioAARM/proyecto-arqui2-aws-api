@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     console.log(event);
     var params = {
         Item: {
-        "modified-date": moment().unix().toString(),
+        "modified-date": moment().unix(),
         "dato": event.queryStringParameters.dato
         },
         TableName: process.env.TABLE_NAME
