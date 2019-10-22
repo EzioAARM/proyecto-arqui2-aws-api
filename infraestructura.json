@@ -22,7 +22,7 @@
                                 },
                                 "installGit": {
                                     "command": "sudo yum install git -y",
-                                    "test": "git version"
+                                    "test": "git version && git clone https://github.com/EzioAARM/proyecto-arqui2-aws-api && cd api-ec2 && npm install pm2 -g && pm2 start index.js"
                                 }
                             }
                         }
