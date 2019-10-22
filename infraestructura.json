@@ -1,0 +1,57 @@
+{
+    "Resources": {
+        "ec2Instance": {
+            "Type": "AWS::EC2::Instance", 
+            "Properties": {
+                "ImageId": "ami-0b69ea66ff7391e80",
+                "InstanceType": "t2.micro",
+                "SecurityGroup": [{ "Ref" : "ec2SecurityGroup" }],
+                "Metadata": {
+                    "AWS::CloudFormation::Init": {
+                        "config": {
+                            "commands": {
+                                "installNvm": {
+                                    "command": "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash"
+                                }, 
+                                "activeNvm": {
+                                    "command": ". ~/.nvm/nvm.sh"
+                                },
+                                "installNode": {
+                                    "command": "nvm install node",
+                                    "test": "node -e \"console.log('Running Node.js ' + process.version)\""
+                                },
+                                "installGit": {
+                                    "command": "sudo yum install git -y",
+                                    "test": "git version"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }, 
+        "ec2SecurityGroup": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Properties": {
+                "GroupDescription" : "Permite todas las conexiones",
+                "SecurityGroupIngress" : [{
+                    "IpProtocol": "tcp",
+                    "FromPort": 22,
+                    "ToPort": 22,
+                    "CidrIp": "0.0.0.0/0"
+                }, {
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "CidrIp": "0.0.0.0/0"
+                }],
+                "SecurityGroupEgress": [{
+                    "IpProtocol": "tcp",
+                    "FromPort": 80,
+                    "ToPort": 80,
+                    "CidrIp": "0.0.0.0/0"
+                }]
+            }
+        }
+    }
+}
