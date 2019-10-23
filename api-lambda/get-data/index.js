@@ -13,12 +13,13 @@ exports.handler = (event, context, callback) => {
         if (err){
             callback(err, null);
         } else {
-            
             var sortedData = [];
             sortedData = data.Items;
             var posSortingR1 = 0;
             var posSortingR2 = 0;
             var tempJson = {};
+            var timeDiffVar = 0;
+            var vueltas = 0;
             while (posSortingR1 <= data.Count - 1) {
                 posSortingR2 = 0;
                 while ( posSortingR2 <= data.Count - 1) {
@@ -31,30 +32,23 @@ exports.handler = (event, context, callback) => {
                 }
                 posSortingR1++;
             }
-            var sessionsGroups = [];
-            var actualSession = [];
+            console.log(sortedData);
             var actualRow = 0;
-            while (actualRow <= sortedData.length - 1) {
-                if (actualRow == sortedData.length - 1) {
-                    actualSession.push(sortedData[actualRow]);
-                    sessionsGroups.push(actualSession);
-                } else {
-                    var firstDate = moment(sortedData[actualRow]['modified-date']);
-                    var secondDate = moment(sortedData[actualRow + 1]['modified-date']);
-                    var dateDiff = secondDate.diff(firstDate, 'seconds', true);
-                    if (dateDiff < 5) {
-                        actualSession.push(sortedData[actualRow]);
-                        
-                    } else {
-                        sessionsGroups.push(actualSession);
-                        actualSession = [];
-                    }
-                }
+            while (actualRow < sortedData.length) {
+                vueltas = vueltas + sortedData[actualRow]['dato'];
                 actualRow++;
             }
+            if (data.Count >= 1) {
+                var primeraMedicion = moment(sortedData[0]['modified-date']);
+                var ultimaMedicion = moment(sortedData[sortedData.length - 1]['modified-date']).diff(primeraMedicion, 'hours', true);
+                console.log(timeDiffVar);
+            } else {
+                ultimaMedicion = 0;
+            }
             callback(null, {
-                sessions: sessionsGroups,
-                groups: sessionsGroups.length
+                vueltas: data.Count,
+                timeDiff: ultimaMedicion,
+                info: 'data'
             });
         }
     });
