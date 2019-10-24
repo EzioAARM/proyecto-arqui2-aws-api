@@ -35,20 +35,21 @@ exports.handler = (event, context, callback) => {
             console.log(sortedData);
             var actualRow = 0;
             while (actualRow < sortedData.length) {
-                vueltas = vueltas + sortedData[actualRow]['dato'];
+                vueltas = vueltas + parseInt(sortedData[actualRow]['dato']);
                 actualRow++;
             }
             if (data.Count >= 1) {
                 var primeraMedicion = moment(sortedData[0]['modified-date']);
-                var ultimaMedicion = moment(sortedData[sortedData.length - 1]['modified-date']).diff(primeraMedicion, 'hours', true);
+                var ultimaMedicion = moment(sortedData[sortedData.length - 1]['modified-date']).diff(primeraMedicion, 'seconds', true);
                 console.log(timeDiffVar);
             } else {
                 ultimaMedicion = 0;
             }
             callback(null, {
-                vueltas: data.Count,
+                vueltas: vueltas,
                 timeDiff: ultimaMedicion,
-                info: 'data'
+                info: 'data',
+                statusCode: 200
             });
         }
     });
